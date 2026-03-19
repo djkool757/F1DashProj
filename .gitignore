@@ -1,0 +1,7 @@
+frontend\node_modules
+*.cache
+*.exe
+*.pdb
+*.dll
+*.dswa.cache.json
+*./sourcelink.json

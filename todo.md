@@ -37,6 +37,7 @@
 - [ ] Add List of endpoints html
 - [ ] Add pagination for large data sets
 - [ ] Add filtering parameters to existing endpoints
+- [ ] Add implement fallback UIs or loading indicators (using Vue's <Suspense> component) due to lazy loading in index.js
 
 ### Data Models
 - [ ] Review and validate all model mappings from F1 API

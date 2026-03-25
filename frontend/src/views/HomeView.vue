@@ -2,9 +2,13 @@
 import NavBar from '@/components/NavBar.vue';
 </script>
 
+
 <template>
-  <main>
-    <NavBar
-     />
+<header>
+    <NavBar />
+</header>
+
+<main>
+  <p>why</p>
   </main>
 </template>

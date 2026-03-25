@@ -5,17 +5,6 @@
   <header>
     <img alt="Vue logo" class="logo" src="@/assets/f1_logo.png" width="125" height="125" />
     <div class="wrapper">
-
-      <!-- Latest Race Info
-      <div class="latest-race-info">
-        <p v-if="loading" class="status">Loading latest race...</p>
-        <p v-else-if="error" class="status error">{{ error }}</p>
-        <p v-else class="status success">
-          Latest Race: <strong>{{ latestRace?.raceName }}</strong> 
-          <span v-if="latestRace?.date">({{ new Date(latestRace.date).toLocaleDateString() }})</span>
-        </p>
-      </div> -->
-
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/latest-race">Latest Race</RouterLink>
@@ -34,8 +23,9 @@
 <style scoped>
 header {
   display: flex;
-  justify-content: center;
   top: 0;
+  left: 0;
+  place-items: center;
   width: 100%;
 }
 
@@ -103,7 +93,9 @@ nav a:first-of-type {
 
   header .wrapper {
     display: flex;
-    place-items: flex-start;
+    top: 0;
+    left: 0;
+    width: 100%;
     flex-wrap: wrap;
   }
 

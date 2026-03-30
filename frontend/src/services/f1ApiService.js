@@ -11,10 +11,9 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/f1';
  */
 export async function getLatestRace() {
   try {
-    const url = `${API_BASE_URL}/latest-race`;
-    
-    const response = await fetch(url);
-    
+
+    const response = await fetch(`${API_BASE_URL}/latest-race`);
+
     if (!response.ok) {
       throw new Error(`API error: ${response.status}`);
     }
@@ -26,6 +25,19 @@ export async function getLatestRace() {
   }
 }
 
+export async function getResults(season, round = 1 ) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/results/${season}/${round}`);
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching races:', error);
+    throw error;
+  }
+}
 /**
  * Fetch all races for a specific season
  * @param {string} season - Season year

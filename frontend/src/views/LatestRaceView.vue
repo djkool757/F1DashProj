@@ -13,12 +13,19 @@
       <p v-if="trackError" class="error">{{ trackError }}</p>
       <img v-if="trackImageUrl && showTrack" :src="trackImageUrl" :alt="`${latestRace?.raceName} track layout`" />
     </div>
+
+    <div class="ministandings">
+      <h3>Top 3 Finishers</h3>
+      <button @click="getResults(latestRace.season, latestRace.round)">
+<!-- here is where I'll parse the json and create a nice box for drivers standing :) -->
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { getLatestRace } from '../services/f1ApiService'
+import { getLatestRace, getResults } from '../services/f1ApiService'
 
 const latestRace = ref(null)
 const loading = ref(true)
@@ -86,6 +93,7 @@ onMounted(async () => {
     const raceData = await getLatestRace()
     latestRace.value = raceData
     console.log('Latest race fetched:', raceData)
+    console.log('Race results:', raceData.results)
   } catch (err) {
     error.value = err.message
     console.error('Failed to fetch latest race:', err)

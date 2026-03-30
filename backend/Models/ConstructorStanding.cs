@@ -10,7 +10,7 @@ public class ConstructorStanding
     /// The constructor's current championship position in the constructor standings (1 = championship leader, 2 = second, etc.).
     /// Note: Property is named "Postion" due to API consistency; represents championship position.
     /// </summary>
-    public int Postion { get; set; }
+    public string Postion { get; set; }
     
     /// <summary>
     /// The text representation of the constructor's championship position (e.g., "1\", \"2\", etc.).
@@ -22,7 +22,7 @@ public class ConstructorStanding
     /// The total championship points accumulated by the constructor across all races in the season.
     /// Points combine results from both drivers and are awarded based on finishing positions.
     /// </summary>
-    public int Points { get; set; }
+    public string Points { get; set; }
     
     /// <summary>
     /// The total number of race wins achieved by the constructor (combined from both drivers) in the season so far.

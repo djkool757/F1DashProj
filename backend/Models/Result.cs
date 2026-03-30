@@ -13,7 +13,7 @@ public class Result
     /// <summary>
     /// The final position where the driver finished (1-20 typically, or higher if DNF).
     /// </summary>
-    public int Postion { get; set; }
+    public string Postion { get; set; }
     
     /// <summary>
     /// String representation of the finishing position (e.g., "1", "2", "+1 Lap", "DNF").
@@ -23,7 +23,7 @@ public class Result
     /// <summary>
     /// Championship points awarded for this finishing position.
     /// </summary>
-    public int Points { get; set; }
+    public string Points { get; set; }
     
     /// <summary>
     /// The driver who achieved this result with full driver information.

@@ -150,7 +150,7 @@ public class F1ApiService : IF1ApiService
         try
         {
             string url = round != null 
-                ? $"{BaseUrl}/{season}/results/{round}" 
+                ? $"{BaseUrl}/{season}/{round}/results/" 
                 : $"{BaseUrl}/{season}/results";
             return await FetchData(url);
         }

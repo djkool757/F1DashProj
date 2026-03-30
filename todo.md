@@ -20,7 +20,7 @@
 ## 🟡 Medium Priority
 
 ### Frontend Enhancements
-- [ ] Add race standings view
+- [ ] Add race standings view, parse json call
 - [ ] Add driver standings view
 - [ ] Add constructor standings view
 - [ ] Improve NavBar navigation and styling
@@ -30,9 +30,9 @@
 - [ ] Add loading spinners for all data fetches
 
 ### Backend Enhancements
-- [ ] Add endpoints for race standings
-- [ ] Add endpoints for driver standings  
-- [ ] Add endpoints for constructor standings
+- [ x]  Add endpoints for race standings
+- [ x ] Add endpoints for driver standings  
+- [ x ] Add endpoints for constructor standings
 - [ ] Add endpoints for race calendar
 - [ ] Add List of endpoints html
 - [ ] Add pagination for large data sets

@@ -38,6 +38,37 @@ export async function getResults(season, round = 1 ) {
     throw error;
   }
 }
+// working
+export async function getDriverStandings(season, round) {
+  try {
+    const endpoint = round ? `${API_BASE_URL}/standings/drivers/${season}/${round}` : `${API_BASE_URL}/standings/drivers/${season}`;
+    const response = await fetch(endpoint);
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+    // mrData.StandingsTable.StandingsLists[0].driverStandings (array of driver standings for the season/round)
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching driver standings:', error);
+    throw error;
+  }
+}
+
+export async function getConstructorStandings(season, round) {
+  try {
+    const endpoint = round ? `${API_BASE_URL}/standings/constructors/${season}/${round}` : `${API_BASE_URL}/standings/constructors/${season}`;
+    const response = await fetch(endpoint);
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching constructor standings:', error);
+    throw error;
+  }
+}
+
 /**
  * Fetch all races for a specific season
  * @param {string} season - Season year

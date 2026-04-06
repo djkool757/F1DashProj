@@ -77,8 +77,11 @@ function toggleMenu() {
 
 /* ── Navbar Shell ───────────────────────────────── */
 .navbar {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
   z-index: 1000;
   background: var(--f1-dark);
   box-shadow: 0 2px 24px rgba(0, 0, 0, 0.6);

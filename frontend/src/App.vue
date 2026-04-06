@@ -1,4 +1,5 @@
 <script setup>
+
  </script>
 
 <template>
@@ -9,15 +10,13 @@
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/latest-race">Latest Race</RouterLink>
         <RouterLink to="/standings">Standings</RouterLink>
-        <RouterLink to="/schedule">Schedule</RouterLink>
+        <RouterLink to="/schedule">Calendar</RouterLink>
         <RouterLink to="/teams">Teams</RouterLink>
         <RouterLink to="/results">Results</RouterLink>
       </nav>
-
       <RouterView />
     </div>
   </header>
-
 </template>
 
 <style scoped>

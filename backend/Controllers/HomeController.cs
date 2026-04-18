@@ -19,6 +19,7 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
+        Console.WriteLine("HomeController Index action called");
         return View();
     }
 
@@ -32,6 +33,7 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+    
 
     // // API endpoints
     // public async Task<IActionResult> Races()

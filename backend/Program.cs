@@ -11,6 +11,7 @@ builder.Services.AddControllers()
     });
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient<IF1ApiService, F1ApiService>();
+builder.Services.AddMemoryCache();
 builder.Services.AddResponseCaching();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

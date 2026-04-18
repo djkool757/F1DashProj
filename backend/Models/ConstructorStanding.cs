@@ -8,9 +8,8 @@ public class ConstructorStanding
 {
     /// <summary>
     /// The constructor's current championship position in the constructor standings (1 = championship leader, 2 = second, etc.).
-    /// Note: Property is named "Postion" due to API consistency; represents championship position.
     /// </summary>
-    public string Postion { get; set; }
+    public string Position { get; set; }
     
     /// <summary>
     /// The text representation of the constructor's championship position (e.g., "1\", \"2\", etc.).

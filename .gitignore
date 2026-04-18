@@ -1,7 +1,22 @@
-frontend\node_modules
-*.cache
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# .NET build output
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Artifacts
 *.exe
-*.pdb
 *.dll
+*.pdb
+*.cache
 *.dswa.cache.json
-*./sourcelink.json
+*.sourcelink.json
+appsettings.Development.json

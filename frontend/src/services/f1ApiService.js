@@ -56,7 +56,9 @@ export async function getDriverStandings(season, round) {
 
 export async function getConstructorStandings(season, round) {
   try {
-    const endpoint = round ? `${API_BASE_URL}/standings/constructors/${season}/${round}` : `${API_BASE_URL}/standings/constructors/${season}`;
+    const endpoint = round
+      ? `${API_BASE_URL}/standings/constructors/${season}/${round}`
+      : `${API_BASE_URL}/standings/constructors/${season}`;
     const response = await fetch(endpoint);
     if (!response.ok) {
       throw new Error(`API error: ${response.status}`);
@@ -105,6 +107,17 @@ export async function getDrivers(season) {
     return await response.json();
   } catch (error) {
     console.error('Error fetching drivers:', error);
+    throw error;
+  }
+}
+
+export async function getLaps(season, round) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/laps/${season}/${round}`);
+    if (!response.ok) throw new Error(`API error: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching laps:', error);
     throw error;
   }
 }

@@ -12,28 +12,15 @@
 - [ ] Set up test coverage reporting
 
 ### Core Features
-- [ ] Verify all API endpoints are working correctly
 - [ ] Test latest race feature in production
-- [ ] Add error handling for API failures
-- [ ] Cache race data to reduce API calls
 
 ## 🟡 Medium Priority
 
 ### Frontend Enhancements
-- [ ] Add race standings view, parse json call
-- [ ] Add driver standings view
-- [ ] Add constructor standings view
-- [ ] Improve NavBar navigation and styling
-- [ ] Add race calendar view
-- [ ] Add search/filter functionality
 - [ ] Responsive design for mobile devices
 - [ ] Add loading spinners for all data fetches
 
 ### Backend Enhancements
-- [ x]  Add endpoints for race standings
-- [ x ] Add endpoints for driver standings  
-- [ x ] Add endpoints for constructor standings
-- [ ] Add endpoints for race calendar
 - [ ] Add List of endpoints html
 - [ ] Add pagination for large data sets
 - [ ] Add filtering parameters to existing endpoints
@@ -68,9 +55,8 @@
 - [ ] Set up monitoring and logging
 
 ### UI/UX Improvements
-- [ ] Add dark mode support
-- [ ] Improve color scheme and branding
 - [ ] Add animations and transitions
+- [ ] Fix the Lap Chart and bottom of resultsview
 - [ ] Create consistent component library
 - [ ] Add accessibility features (ARIA labels, etc.)
 
@@ -80,3 +66,18 @@
 - [x] Set up frontend Vue.js structure
 - [x] Implement latest race feature
 - [x] Create base models for F1 API
+- [x] Verify all API endpoints are working correctly
+- [x] Add error handling for API failures
+- [x] Cache race data to reduce API calls
+- [x] Add race standings view, parse json call
+- [x] Add driver standings view
+- [x] Add constructor standings view
+- [x] Improve NavBar navigation and styling
+- [x] Add race calendar view
+- [x] Add search/filter functionality
+- [x] Add endpoints for race standings
+- [x] Add endpoints for driver standings
+- [x] Add endpoints for constructor standings
+- [x] Add endpoints for race calendar
+- [x] Add dark mode support
+- [x] Improve color scheme and branding

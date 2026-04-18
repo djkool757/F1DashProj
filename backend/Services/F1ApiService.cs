@@ -1,5 +1,6 @@
 using WebApplication1.Models;
 using System.Text.Json;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace WebApplication1.Services;
 
@@ -28,29 +29,33 @@ public class F1ApiService : IF1ApiService
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger<F1ApiService> _logger;
+    private readonly IMemoryCache _cache;
     private const string BaseUrl = "https://api.jolpi.ca/ergast/f1";
-    
+    private static readonly TimeSpan DefaultCacheDuration = TimeSpan.FromMinutes(5);
+    private static readonly TimeSpan StaticCacheDuration = TimeSpan.FromHours(1);
+
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
 
-    public F1ApiService(HttpClient httpClient, ILogger<F1ApiService> logger)
+    public F1ApiService(HttpClient httpClient, ILogger<F1ApiService> logger, IMemoryCache cache)
     {
         _httpClient = httpClient;
         _logger = logger;
+        _cache = cache;
     }
 
     /// <summary>
     /// Gets all seasons from the F1 API
     /// </summary>
-    public async Task<F1ApiResponse> GetSeasons()
+     public async Task<F1ApiResponse> GetSeasons()
     {
         try
         {
             string url = $"{BaseUrl}/seasons";
-            return await FetchData(url);
+            return await FetchData(url, StaticCacheDuration);
         }
         catch (Exception ex)
         {
@@ -67,7 +72,7 @@ public class F1ApiService : IF1ApiService
         try
         {
             string url = $"{BaseUrl}/circuits";
-            return await FetchData(url);
+            return await FetchData(url, StaticCacheDuration);
         }
         catch (Exception ex)
         {
@@ -100,7 +105,7 @@ public class F1ApiService : IF1ApiService
     /// <summary>
     /// Gets constructors for a specific season
     /// </summary>
-    public async Task<F1ApiResponse> GetConstructors(string season)
+    public async Task<F1ApiResponse> GetConstructors(string season, string? round = null)
 
     
     {
@@ -239,7 +244,7 @@ public class F1ApiService : IF1ApiService
         
         try
         {
-            string url = $"{BaseUrl}/{season}/{round}/laps";
+            string url = $"{BaseUrl}/{season}/{round}/laps?limit=100";
             return await FetchData(url);
         }
         catch (Exception ex)
@@ -267,28 +272,6 @@ public class F1ApiService : IF1ApiService
         catch (Exception ex)
         {
             _logger.LogError(ex, $"Error fetching driver standings for season {season}, round {round}");
-            throw;
-        }
-    }
-
-    /// <summary>
-    /// Gets constructor championship standings for a season or after a specific round
-    /// </summary>
-    public async Task<F1ApiResponse> GetConstructorStandings(string season, string? round = null)
-    {
-        if (string.IsNullOrWhiteSpace(season))
-            throw new ArgumentException("Season cannot be null or empty", nameof(season));
-        
-        try
-        {
-            string url = round != null 
-                ? $"{BaseUrl}/{season}/{round}/constructorstandings" 
-                : $"{BaseUrl}/{season}/constructorstandings";
-            return await FetchData(url);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, $"Error fetching constructor standings for season {season}, round {round}");
             throw;
         }
     }
@@ -347,12 +330,18 @@ public class F1ApiService : IF1ApiService
     /// <summary>
     /// Private helper method to fetch and deserialize data from the API
     /// </summary>
-    private async Task<F1ApiResponse> FetchData(string url)
+        private async Task<F1ApiResponse> FetchData(string url, TimeSpan? cacheDuration = null)
     {
+        if (_cache.TryGetValue(url, out F1ApiResponse? cached) && cached != null)
+        {
+            _logger.LogInformation($"Cache hit: {url}");
+            return cached;
+        }
+
         try
         {
             _logger.LogInformation($"Fetching data from: {url}");
-            
+
             using var response = await _httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
 
@@ -360,10 +349,11 @@ public class F1ApiService : IF1ApiService
             var data = JsonSerializer.Deserialize<F1ApiResponse>(jsonContent, JsonOptions);
 
             if (data == null)
-             {
+            {
                 throw new InvalidOperationException("Failed to deserialize API response");
             }
 
+            _cache.Set(url, data, cacheDuration ?? DefaultCacheDuration);
             return data;
         }
         catch (HttpRequestException ex)

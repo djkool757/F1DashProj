@@ -1,110 +1,48 @@
-<script setup>
-
- </script>
+<script setup></script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/f1_logo.png" width="125" height="125" />
-    <div class="wrapper">
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/latest-race">Latest Race</RouterLink>
-        <RouterLink to="/standings">Standings</RouterLink>
-        <RouterLink to="/schedule">Calendar</RouterLink>
-        <RouterLink to="/teams">Teams</RouterLink>
-        <RouterLink to="/results">Results</RouterLink>
-      </nav>
-      <RouterView />
-    </div>
-  </header>
+  <RouterView />
 </template>
 
-<style scoped>
-header {
-  display: flex;
-  top: 0;
-  left: 0;
-  place-items: center;
-  width: 100%;
+<style>
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+:root {
+  --bg:       #0e0e0e;
+  --bg-card:  #111111;
+  --bg-el:    #1a1a1a;
+  --bg-hover: #161616;
+  --border:   #1e1e1e;
+  --border-2: #2a2a2a;
+  --text:     #ffffff;
+  --text-2:   #999999;
+  --text-3:   #555555;
+  --text-4:   #333333;
+  --accent:   #e10600;
 }
 
-.latest-race-info {
-  margin: 1rem 0;
-  padding: 1rem;
-  border-radius: 4px;
-  text-align: center;
+[data-theme="light"] {
+  --bg:       #f2f2f2;
+  --bg-card:  #ffffff;
+  --bg-el:    #ebebeb;
+  --bg-hover: #e4e4e4;
+  --border:   #e0e0e0;
+  --border-2: #cccccc;
+  --text:     #111111;
+  --text-2:   #555555;
+  --text-3:   #888888;
+  --text-4:   #bbbbbb;
+  --accent:   #e10600;
 }
 
-.status {
+body {
   margin: 0;
-}
-
-.status.success {
-  color: #0f8c3f;
-  background-color: #e8f5e9;
-}
-
-.status.error {
-  color: #d32f2f;
-  background-color: #ffebee;
-}
-
-nav {
+  background: var(--bg);
+  color: var(--text);
   width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    top: 0;
-    left: 0;
-    width: 100%;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+  overflow-x: hidden;
+  transition: background 0.2s, color 0.2s;
 }
 </style>

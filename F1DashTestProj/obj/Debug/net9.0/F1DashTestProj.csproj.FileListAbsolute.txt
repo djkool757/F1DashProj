@@ -1,9 +1,0 @@
-C:\Users\djkoo_pmyyh46\Downloads\F1DashProj\F1DashTestProj\bin\Debug\net9.0\.msCoverageSourceRootsMapping_F1DashTestProj
-C:\Users\djkoo_pmyyh46\Downloads\F1DashProj\F1DashTestProj\bin\Debug\net9.0\CoverletSourceRootsMapping_F1DashTestProj
-C:\Users\djkoo_pmyyh46\Downloads\F1DashProj\F1DashTestProj\obj\Debug\net9.0\F1DashTestProj.csproj.AssemblyReference.cache
-C:\Users\djkoo_pmyyh46\Downloads\F1DashProj\F1DashTestProj\obj\Debug\net9.0\F1DashTestProj.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\djkoo_pmyyh46\Downloads\F1DashProj\F1DashTestProj\obj\Debug\net9.0\F1DashTestProj.AssemblyInfoInputs.cache
-C:\Users\djkoo_pmyyh46\Downloads\F1DashProj\F1DashTestProj\obj\Debug\net9.0\F1DashTestProj.AssemblyInfo.cs
-C:\Users\djkoo_pmyyh46\Downloads\F1DashProj\F1DashTestProj\obj\Debug\net9.0\F1DashTestProj.csproj.CoreCompileInputs.cache
-C:\Users\djkoo_pmyyh46\Downloads\F1DashProj\F1DashTestProj\obj\Debug\net9.0\F1DashTestProj.dll
-C:\Users\djkoo_pmyyh46\Downloads\F1DashProj\F1DashTestProj\obj\Debug\net9.0\F1DashTestProj.pdb

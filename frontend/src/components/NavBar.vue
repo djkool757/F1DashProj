@@ -3,13 +3,7 @@
     <div class="navbar-inner">
       <!-- Left: Logo -->
       <div class="navbar-brand">
-        <img
-          alt="f1 logo"
-          class="logo"
-          src="@/assets/F1_logo.png"                  
-          width="100"
-          height="1000"
-        />
+        <img alt="f1 logo" class="logo" src="../assets/F1_logo.png" width="100" height="1000" />
       </div>
 
       <!-- Center: Title -->
@@ -19,33 +13,46 @@
         <span class="title-line" aria-hidden="true"></span>
       </div>
 
-      <!-- Right: Nav Links -->
-      <ul class="navbar-links">
-        <li><a href="#" class="nav-link active">Standings</a></li>
-        <li><a href="#" class="nav-link">Schedule</a></li>
-        <li><a href="#" class="nav-link">Teams</a></li>
-        <li><a href="#" class="nav-link">Results</a></li>
-      </ul>
+      <!-- Right: Nav Links + Theme Toggle -->
+      <div class="navbar-right">
+        <ul class="navbar-links">
+          <li><RouterLink to="/" class="nav-link" exact-active-class="active">Home</RouterLink></li>
+          <li><RouterLink to="/latest-race" class="nav-link" exact-active-class="active">Latest Race</RouterLink></li>
+          <li><RouterLink to="/standings" class="nav-link" exact-active-class="active">Standings</RouterLink></li>
+          <li><RouterLink to="/schedule" class="nav-link" exact-active-class="active">Schedule</RouterLink></li>
+          <li><RouterLink to="/teams" class="nav-link" exact-active-class="active">Teams</RouterLink></li>
+          <li><RouterLink to="/results" class="nav-link" exact-active-class="active">Results</RouterLink></li>
+        </ul>
+
+        <button class="theme-toggle" @click="toggle" :aria-label="theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">
+          <span v-if="theme === 'dark'">☀</span>
+          <span v-else>☾</span>
+        </button>
+      </div>
 
       <!-- Mobile Hamburger -->
       <button class="hamburger" @click="toggleMenu" :class="{ open: menuOpen }" aria-label="Toggle menu">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span>
       </button>
     </div>
 
     <!-- Mobile Menu -->
     <div class="mobile-menu" :class="{ open: menuOpen }">
       <ul>
-        <li><a href="#" class="nav-link active" @click="menuOpen = false">Standings</a></li>
-        <li><a href="#" class="nav-link" @click="menuOpen = false">Schedule</a></li>
-        <li><a href="#" class="nav-link" @click="menuOpen = false">Teams</a></li>
-        <li><a href="#" class="nav-link" @click="menuOpen = false">Results</a></li>
+        <li><RouterLink to="/" class="nav-link" exact-active-class="active" @click="menuOpen = false">Home</RouterLink></li>
+        <li><RouterLink to="/latest-race" class="nav-link" exact-active-class="active" @click="menuOpen = false">Latest Race</RouterLink></li>
+        <li><RouterLink to="/standings" class="nav-link" exact-active-class="active" @click="menuOpen = false">Standings</RouterLink></li>
+        <li><RouterLink to="/schedule" class="nav-link" exact-active-class="active" @click="menuOpen = false">Schedule</RouterLink></li>
+        <li><RouterLink to="/teams" class="nav-link" exact-active-class="active" @click="menuOpen = false">Teams</RouterLink></li>
+        <li><RouterLink to="/results" class="nav-link" exact-active-class="active" @click="menuOpen = false">Results</RouterLink></li>
+        <li>
+          <button class="theme-toggle mobile-theme" @click="toggle">
+            {{ theme === 'dark' ? '☀ Light mode' : '☾ Dark mode' }}
+          </button>
+        </li>
       </ul>
     </div>
 
-    <!-- Bottom racing stripe -->
     <div class="racing-stripe">
       <div class="stripe red"></div>
       <div class="stripe white"></div>
@@ -55,37 +62,26 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useTheme } from '@/composables/useTheme.js'
 
 const menuOpen = ref(false)
+const { theme, toggle } = useTheme()
 
-function toggleMenu() {
-  menuOpen.value = !menuOpen.value
-}
+function toggleMenu() { menuOpen.value = !menuOpen.value }
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&display=swap');
 
-:root {
-  --f1-red: #e10600;
-  --f1-dark: #111111;
-  --f1-carbon: #1a1a1a;
-  --f1-light: #f5f5f5;
-  --f1-muted: #888888;
-  --f1-accent: #e10600;
-}
-
-/* ── Navbar Shell ───────────────────────────────── */
 .navbar {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 0; left: 0; right: 0;
   width: 100%;
   z-index: 1000;
-  background: var(--f1-dark);
-  box-shadow: 0 2px 24px rgba(0, 0, 0, 0.6);
+  background: var(--bg-card);
+  box-shadow: 0 2px 24px rgba(0,0,0,0.3);
   font-family: 'Barlow Condensed', sans-serif;
+  transition: background 0.2s;
 }
 
 .navbar-inner {
@@ -98,29 +94,23 @@ function toggleMenu() {
   margin: 0 auto;
 }
 
-/* ── Logo ───────────────────────────────────────── */
-.navbar-brand {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-}
+.navbar-brand { display: flex; align-items: center; flex-shrink: 0; }
 
 .logo {
   height: 36px;
-  top: 0;
   width: auto;
   object-fit: contain;
   display: block;
-  /* Invert if logo is dark so it shows on dark bg; remove if logo is already white/red */
   filter: brightness(0) invert(1);
-  transition: opacity 0.2s;
+  transition: opacity 0.2s, filter 0.2s;
 }
 
-.logo:hover {
-  opacity: 0.85;
+[data-theme="light"] .logo {
+  filter: brightness(0);
 }
 
-/* ── Title ──────────────────────────────────────── */
+.logo:hover { opacity: 0.85; }
+
 .navbar-title {
   display: flex;
   align-items: center;
@@ -136,7 +126,7 @@ function toggleMenu() {
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--f1-light);
+  color: #e10600;
   white-space: nowrap;
 }
 
@@ -144,11 +134,16 @@ function toggleMenu() {
   display: block;
   width: 28px;
   height: 2px;
-  background: var(--f1-red);
+  background: #e10600;
   flex-shrink: 0;
 }
 
-/* ── Nav Links ──────────────────────────────────── */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .navbar-links {
   display: flex;
   align-items: center;
@@ -165,43 +160,46 @@ function toggleMenu() {
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--f1-muted);
+  color: #e10600;
   text-decoration: none;
   border-bottom: 2px solid transparent;
   transition: color 0.2s, border-color 0.2s;
 }
 
-.nav-link:hover,
-.nav-link.active {
-  color: var(--f1-light);
-  border-bottom-color: var(--f1-red);
+.nav-link:hover, .nav-link.active {
+  color: #e10600;
+  border-bottom-color: #e10600;
 }
 
-.nav-link.active {
-  color: var(--f1-red);
-}
-
-/* ── Racing Stripe ──────────────────────────────── */
-.racing-stripe {
+/* ── Theme Toggle ──────────────────────────────── */
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--border-2);
+  color: var(--text-2);
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
   display: flex;
-  height: 3px;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  flex-shrink: 0;
 }
 
-.stripe {
-  flex: 1;
+.theme-toggle:hover {
+  border-color: #e10600;
+  color: var(--text);
 }
 
-.stripe.red {
-  background: var(--f1-red);
-  flex: 8;
-}
+/* ── Racing Stripe ────────────────────────────── */
+.racing-stripe { display: flex; height: 3px; }
+.stripe { flex: 1; }
+.stripe.red  { background: #e10600; flex: 8; }
+.stripe.white { background: #ffffff; flex: 1; }
 
-.stripe.white {
-  background: #ffffff;
-  flex: 1;
-}
-
-/* ── Hamburger ──────────────────────────────────── */
+/* ── Hamburger ────────────────────────────────── */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -211,42 +209,33 @@ function toggleMenu() {
   border: none;
   cursor: pointer;
   padding: 6px;
-  z-index: 10;
 }
 
 .hamburger span {
   display: block;
   width: 24px;
   height: 2px;
-  background: var(--f1-light);
+  background: #e10600;
   border-radius: 2px;
   transition: transform 0.25s, opacity 0.25s;
   transform-origin: center;
 }
 
-.hamburger.open span:nth-child(1) {
-  transform: translateY(7px) rotate(45deg);
-}
-.hamburger.open span:nth-child(2) {
-  opacity: 0;
-}
-.hamburger.open span:nth-child(3) {
-  transform: translateY(-7px) rotate(-45deg);
-}
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* ── Mobile Menu ────────────────────────────────── */
+/* ── Mobile Menu ──────────────────────────────── */
 .mobile-menu {
   display: none;
-  background: var(--f1-carbon);
-  border-top: 1px solid #2a2a2a;
+  background: var(--bg-el);
+  border-top: 1px solid var(--border);
   overflow: hidden;
   max-height: 0;
   transition: max-height 0.3s ease;
 }
 
-.mobile-menu.open {
-  max-height: 300px;
-}
+.mobile-menu.open { max-height: 360px; }
 
 .mobile-menu ul {
   list-style: none;
@@ -260,36 +249,38 @@ function toggleMenu() {
 .mobile-menu .nav-link {
   font-size: 1rem;
   padding: 0.6rem 0;
-  border-bottom: 1px solid #2a2a2a;
+  border-bottom: 1px solid var(--border);
 }
 
-/* ── Responsive ─────────────────────────────────── */
+.mobile-theme {
+  background: none;
+  border: none;
+  color: var(--text-2);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.6rem 0;
+  cursor: pointer;
+  text-align: left;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  display: block;
+}
+
+/* ── Responsive ───────────────────────────────── */
 @media (max-width: 768px) {
-  .navbar-title h2 {
-    font-size: 0.9rem;
-    letter-spacing: 0.06em;
-  }
-
-  .title-line {
-    width: 16px;
-  }
-
-  .navbar-links {
-    display: none;
-  }
-
-  .hamburger {
-    display: flex;
-  }
-
-  .mobile-menu {
-    display: block;
-  }
+  .navbar-title h2 { font-size: 0.9rem; letter-spacing: 0.06em; }
+  .title-line { width: 16px; }
+  .navbar-links { display: none; }
+  .theme-toggle:not(.mobile-theme) { display: none; }
+  .hamburger { display: flex; }
+  .mobile-menu { display: block; }
 }
 
 @media (max-width: 480px) {
-  .navbar-title {
-    display: none;
-  }
+  .navbar-title { display: none; }
 }
 </style>

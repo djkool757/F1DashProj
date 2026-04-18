@@ -231,25 +231,6 @@ public class F1DataController : ControllerBase
     }
 
     /// <summary>
-    /// Get constructor championship standings for a season or after a specific round
-    /// </summary>
-    [EnableCors("AllowAll")]
-    [HttpGet("standings/constructors/{season}/{round?}")]
-    public async Task<ActionResult<F1ApiResponse>> GetConstructorStandings(string season, string? round = null)
-    {
-        try
-        {
-            var result = await _f1ApiService.GetConstructorStandings(season, round);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, $"Error fetching constructor standings for season {season}, round {round}");
-            return StatusCode(500, new { error = "Failed to fetch constructor standings" });
-        }
-    }
-
-    /// <summary>
     /// Get all F1 status codes
     /// </summary>
     [EnableCors("AllowAll")]

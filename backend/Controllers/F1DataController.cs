@@ -1,12 +1,13 @@
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using WebApplication1.Models;
-using WebApplication1.Services;
+using Microsoft.AspNetCore.RateLimiting;
+using Pitwall.Models;
+using Pitwall.Services;
 
-namespace WebApplication1.Controllers;
+namespace Pitwall.Controllers;
 
 [ApiController]
 [Route("api/f1")]
+[EnableRateLimiting("default")]
 public class F1DataController : ControllerBase
 {
     private readonly IF1ApiService _f1ApiService;
@@ -18,10 +19,6 @@ public class F1DataController : ControllerBase
         _logger = logger;
     }
 
-    /// <summary>
-    /// Get all F1 seasons
-    /// </summary>
-    [EnableCors("AllowAll")]
     [HttpGet("seasons")]
     public async Task<ActionResult<F1ApiResponse>> GetSeasons()
     {
@@ -37,10 +34,6 @@ public class F1DataController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Get all F1 circuits
-    /// </summary>
-    [EnableCors("AllowAll")]
     [HttpGet("circuits")]
     public async Task<ActionResult<F1ApiResponse>> GetCircuits()
     {
@@ -56,10 +49,6 @@ public class F1DataController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Get races for a specific season
-    /// </summary>
-    [EnableCors("AllowAll")]
     [HttpGet("races/{season}")]
     public async Task<ActionResult<F1ApiResponse>> GetRaces(string season)
     {
@@ -68,17 +57,17 @@ public class F1DataController : ControllerBase
             var result = await _f1ApiService.GetRaces(season);
             return Ok(result);
         }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error fetching races for season {season}");
-            return StatusCode(500, new { error = $"Failed to fetch races for season {season}" });
+            _logger.LogError(ex, "Error fetching races");
+            return StatusCode(500, new { error = "Failed to fetch races" });
         }
     }
 
-    /// <summary>
-    /// Get constructors for a specific season
-    /// </summary>
-    [EnableCors("AllowAll")]
     [HttpGet("constructors/{season}")]
     public async Task<ActionResult<F1ApiResponse>> GetConstructors(string season)
     {
@@ -87,40 +76,36 @@ public class F1DataController : ControllerBase
             var result = await _f1ApiService.GetConstructors(season);
             return Ok(result);
         }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error fetching constructors for season {season}");
-            return StatusCode(500, new { error = $"Failed to fetch constructors for season {season}" });
+            _logger.LogError(ex, "Error fetching constructors");
+            return StatusCode(500, new { error = "Failed to fetch constructors" });
         }
     }
 
-    /// <summary>
-    /// Get drivers for a specific season
-    /// </summary>
-    [EnableCors("AllowAll")]
     [HttpGet("drivers/{season}")]
     public async Task<ActionResult<F1ApiResponse>> GetDrivers(string season)
     {
         try
         {
             var result = await _f1ApiService.GetDrivers(season);
-            Console.WriteLine($"Fetched drivers for season {season}: {result}");
-
             return Ok(result);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error fetching drivers for season {season}");
-            return StatusCode(500, new { error = $"Failed to fetch drivers for season {season}" });
+            _logger.LogError(ex, "Error fetching drivers");
+            return StatusCode(500, new { error = "Failed to fetch drivers" });
         }
     }
 
-    
-
-    /// <summary>
-    /// Get race results for a season or specific round
-    /// </summary>
-    [EnableCors("AllowAll")]
     [HttpGet("results/{season}/{round?}")]
     public async Task<ActionResult<F1ApiResponse>> GetResults(string season, string? round = null)
     {
@@ -129,17 +114,17 @@ public class F1DataController : ControllerBase
             var result = await _f1ApiService.GetResults(season, round);
             return Ok(result);
         }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error fetching results for season {season}, round {round}");
+            _logger.LogError(ex, "Error fetching results");
             return StatusCode(500, new { error = "Failed to fetch results" });
         }
     }
 
-    /// <summary>
-    /// Get qualifying results for a season or specific round
-    /// </summary>
-    [EnableCors("AllowAll")]
     [HttpGet("qualifying/{season}/{round?}")]
     public async Task<ActionResult<F1ApiResponse>> GetQualifying(string season, string? round = null)
     {
@@ -148,17 +133,17 @@ public class F1DataController : ControllerBase
             var result = await _f1ApiService.GetQualifying(season, round);
             return Ok(result);
         }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error fetching qualifying for season {season}, round {round}");
+            _logger.LogError(ex, "Error fetching qualifying");
             return StatusCode(500, new { error = "Failed to fetch qualifying results" });
         }
     }
 
-    /// <summary>
-    /// Get sprint results for a season or specific round
-    /// </summary>
-    [EnableCors("AllowAll")]
     [HttpGet("sprint/{season}/{round?}")]
     public async Task<ActionResult<F1ApiResponse>> GetSprint(string season, string? round = null)
     {
@@ -167,16 +152,17 @@ public class F1DataController : ControllerBase
             var result = await _f1ApiService.GetSprint(season, round);
             return Ok(result);
         }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error fetching sprint results for season {season}, round {round}");
+            _logger.LogError(ex, "Error fetching sprint results");
             return StatusCode(500, new { error = "Failed to fetch sprint results" });
         }
     }
- 
-    /// Get pit stops for a specific race
-    /// </summary>
-    [EnableCors("AllowAll")]
+
     [HttpGet("pitstops/{season}/{round}")]
     public async Task<ActionResult<F1ApiResponse>> GetPitStops(string season, string round)
     {
@@ -185,17 +171,17 @@ public class F1DataController : ControllerBase
             var result = await _f1ApiService.GetPitStops(season, round);
             return Ok(result);
         }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error fetching pit stops for season {season}, round {round}");
+            _logger.LogError(ex, "Error fetching pit stops");
             return StatusCode(500, new { error = "Failed to fetch pit stops" });
         }
     }
 
-    /// <summary>
-    /// Get lap times for a specific race
-    /// </summary>
-    [EnableCors("AllowAll")]
     [HttpGet("laps/{season}/{round}")]
     public async Task<ActionResult<F1ApiResponse>> GetLaps(string season, string round)
     {
@@ -204,17 +190,17 @@ public class F1DataController : ControllerBase
             var result = await _f1ApiService.GetLaps(season, round);
             return Ok(result);
         }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error fetching laps for season {season}, round {round}");
+            _logger.LogError(ex, "Error fetching laps");
             return StatusCode(500, new { error = "Failed to fetch lap times" });
         }
     }
 
-    /// <summary>
-    /// Get driver championship standings for a season or after a specific round
-    /// </summary>
-    [EnableCors("AllowAll")]
     [HttpGet("standings/drivers/{season}/{round?}")]
     public async Task<ActionResult<F1ApiResponse>> GetDriverStandings(string season, string? round = null)
     {
@@ -223,17 +209,17 @@ public class F1DataController : ControllerBase
             var result = await _f1ApiService.GetDriverStandings(season, round);
             return Ok(result);
         }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error fetching driver standings for season {season}, round {round}");
+            _logger.LogError(ex, "Error fetching driver standings");
             return StatusCode(500, new { error = "Failed to fetch driver standings" });
         }
     }
 
-    /// <summary>
-    /// Get all F1 status codes
-    /// </summary>
-    [EnableCors("AllowAll")]
     [HttpGet("status")]
     public async Task<ActionResult<F1ApiResponse>> GetStatus()
     {
@@ -249,10 +235,6 @@ public class F1DataController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Get the latest race (most recent that has occurred, or upcoming)
-    /// </summary>
-    [EnableCors("AllowAll")]
     [HttpGet("latest-race")]
     public async Task<ActionResult<Race>> GetLatestRace(string? season = null)
     {
@@ -268,4 +250,3 @@ public class F1DataController : ControllerBase
         }
     }
 }
-

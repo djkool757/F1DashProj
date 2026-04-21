@@ -1,8 +1,8 @@
-using WebApplication1.Models;
+using Pitwall.Models;
 using System.Text.Json;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace WebApplication1.Services;
+namespace Pitwall.Services;
 
 // Service interface and implementation for interacting with the F1 API
 // Used by controllers to fetch data without needing to know API details or handle HTTP requests directly
@@ -12,7 +12,7 @@ public interface IF1ApiService
     Task<F1ApiResponse> GetSeasons();
     Task<F1ApiResponse> GetCircuits();
     Task<F1ApiResponse> GetRaces(string season);
-    Task<F1ApiResponse> GetConstructors(string season);
+    Task<F1ApiResponse> GetConstructors(string season, string? round = null);
     Task<F1ApiResponse> GetDrivers(string season);
     Task<F1ApiResponse> GetResults(string season, string? round = null);
     Task<F1ApiResponse> GetSprint(string season, string? round = null);
@@ -20,7 +20,6 @@ public interface IF1ApiService
     Task<F1ApiResponse> GetPitStops(string season, string round);
     Task<F1ApiResponse> GetLaps(string season, string round);
     Task<F1ApiResponse> GetDriverStandings(string season, string? round = null);
-    Task<F1ApiResponse> GetConstructorStandings(string season, string? round = null);
     Task<F1ApiResponse> GetStatuses();
     Task<Race> GetLatestRace(string? season = null);
 }
@@ -45,6 +44,34 @@ public class F1ApiService : IF1ApiService
         _httpClient = httpClient;
         _logger = logger;
         _cache = cache;
+    }
+
+
+    private static void ValidateSeason(string season)
+    {
+        if (string.IsNullOrWhiteSpace(season))
+            throw new ArgumentException("Season cannot be null or empty", nameof(season));
+        if  (season.Any(char.IsLetter))
+            throw new ArgumentException("Season cannot contain letters", nameof(season));
+        if (!int.TryParse(season, out int year) || year < 1950 || year > DateTime.Now.Year + 1)
+            throw new ArgumentException("Season must be a valid year between 1950 and current year + 1", nameof(season));
+        if (season.Length != 4)
+            throw new ArgumentException("Season must be a 4-digit year", nameof(season));
+    }
+
+    private static void ValidateRound(string? round, bool required = false)
+    {
+        if (round == null)
+        {
+            if (required) throw new ArgumentException("Round cannot be null or empty", nameof(round));
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(round))
+            throw new ArgumentException("Round cannot be null or empty", nameof(round));
+        if (round.Any(char.IsLetter))
+            throw new ArgumentException("Round cannot contain letters", nameof(round));
+        if (!int.TryParse(round, out int r) || r < 1 || r > 26)
+            throw new ArgumentException("Round must be a valid integer between 1 and 26", nameof(round));
     }
 
     /// <summary>
@@ -86,10 +113,7 @@ public class F1ApiService : IF1ApiService
     /// </summary>
     public async Task<F1ApiResponse> GetRaces(string season)
     {
-        if (string.IsNullOrWhiteSpace(season))
-            throw new ArgumentException("Season cannot be null or empty", nameof(season));
-        if (!int.TryParse(season, out _))
-            throw new ArgumentException("Season must be a valid year", nameof(season)); 
+        ValidateSeason(season);
         try
         {
             string url = $"{BaseUrl}/{season}/races";
@@ -106,12 +130,9 @@ public class F1ApiService : IF1ApiService
     /// Gets constructors for a specific season
     /// </summary>
     public async Task<F1ApiResponse> GetConstructors(string season, string? round = null)
-
-    
     {
-        if (string.IsNullOrWhiteSpace(season))
-            throw new ArgumentException("Season cannot be null or empty", nameof(season));
-        
+        ValidateSeason(season);
+        ValidateRound(round);
         try
         {
             string url = $"{BaseUrl}/{season}/constructors";
@@ -129,9 +150,7 @@ public class F1ApiService : IF1ApiService
     /// </summary>
     public async Task<F1ApiResponse> GetDrivers(string season)
     {
-        if (string.IsNullOrWhiteSpace(season))
-            throw new ArgumentException("Season cannot be null or empty", nameof(season));
-        
+        ValidateSeason(season);
         try
         {
             string url = $"{BaseUrl}/{season}/drivers";
@@ -149,9 +168,8 @@ public class F1ApiService : IF1ApiService
     /// </summary>
     public async Task<F1ApiResponse> GetResults(string season, string? round = null)
     {
-        if (string.IsNullOrWhiteSpace(season))
-            throw new ArgumentException("Season cannot be null or empty", nameof(season));
-        
+        ValidateSeason(season);
+        ValidateRound(round);
         try
         {
             string url = round != null 
@@ -171,9 +189,8 @@ public class F1ApiService : IF1ApiService
     /// </summary>
     public async Task<F1ApiResponse> GetSprint(string season, string? round = null)
     {
-        if (string.IsNullOrWhiteSpace(season))
-            throw new ArgumentException("Season cannot be null or empty", nameof(season));
-        
+        ValidateSeason(season);
+        ValidateRound(round);
         try
         {
             string url = round != null 
@@ -193,9 +210,8 @@ public class F1ApiService : IF1ApiService
     /// </summary>
     public async Task<F1ApiResponse> GetQualifying(string season, string? round = null)
     {
-        if (string.IsNullOrWhiteSpace(season))
-            throw new ArgumentException("Season cannot be null or empty", nameof(season));
-        
+        ValidateSeason(season);
+        ValidateRound(round);
         try
         {
             string url = round != null 
@@ -215,11 +231,8 @@ public class F1ApiService : IF1ApiService
     /// </summary>
     public async Task<F1ApiResponse> GetPitStops(string season, string round)
     {
-        if (string.IsNullOrWhiteSpace(season))
-            throw new ArgumentException("Season cannot be null or empty", nameof(season));
-        if (string.IsNullOrWhiteSpace(round))
-            throw new ArgumentException("Round cannot be null or empty", nameof(round));
-        
+        ValidateSeason(season);
+        ValidateRound(round, required: true);
         try
         {
             string url = $"{BaseUrl}/{season}/{round}/pitstops";
@@ -237,11 +250,8 @@ public class F1ApiService : IF1ApiService
     /// </summary>
     public async Task<F1ApiResponse> GetLaps(string season, string round)
     {
-        if (string.IsNullOrWhiteSpace(season))
-            throw new ArgumentException("Season cannot be null or empty", nameof(season));
-        if (string.IsNullOrWhiteSpace(round))
-            throw new ArgumentException("Round cannot be null or empty", nameof(round));
-        
+        ValidateSeason(season);
+        ValidateRound(round, required: true);
         try
         {
             string url = $"{BaseUrl}/{season}/{round}/laps?limit=100";
@@ -259,9 +269,8 @@ public class F1ApiService : IF1ApiService
     /// </summary>
     public async Task<F1ApiResponse> GetDriverStandings(string season, string? round = null)
     {
-        if (string.IsNullOrWhiteSpace(season))
-            throw new ArgumentException("Season cannot be null or empty", nameof(season));
-        
+        ValidateSeason(season);
+        ValidateRound(round);
         try
         {
             string url = round != null 

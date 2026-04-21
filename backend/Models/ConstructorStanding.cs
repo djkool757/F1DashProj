@@ -1,4 +1,4 @@
-namespace WebApplication1.Models;
+namespace Pitwall.Models;
 
 /// <summary>
 /// Represents a constructor (team) championship standing including points, position, and wins.

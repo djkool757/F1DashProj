@@ -1,4 +1,4 @@
-namespace WebApplication1.Models;
+namespace Pitwall.Models;
 
 /// <summary>
 /// Represents a pit stop event during a race where a driver stopped at the pit lane for tire change or repairs.

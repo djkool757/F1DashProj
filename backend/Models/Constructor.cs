@@ -1,4 +1,4 @@
-namespace WebApplication1.Models;
+namespace Pitwall.Models;
 
 /// <summary>
 /// Represents an F1 constructor (team) that builds and races cars in the championship.

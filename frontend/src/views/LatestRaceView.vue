@@ -297,10 +297,18 @@ const standingsTitle = computed(() =>
 async function fetchWikipediaThumbnail(wikiUrl) {
   if (!wikiUrl) return null
   try {
-    const pageTitle = wikiUrl.split('/wiki/')[1]
+    const parsed = new URL(wikiUrl)
+    const pathParts = parsed.pathname.split('/wiki/')
+    if (pathParts.length < 2 || !pathParts[1]) return null
+    const pageTitle = encodeURIComponent(decodeURIComponent(pathParts[1]))
     const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${pageTitle}`)
+    if (!res.ok) return null
     const data = await res.json()
-    return data.thumbnail?.source ?? null
+    const src = data.thumbnail?.source
+    if (!src) return null
+    const imgUrl = new URL(src)
+    if (imgUrl.hostname !== 'upload.wikimedia.org') return null
+    return src
   } catch {
     return null
   }

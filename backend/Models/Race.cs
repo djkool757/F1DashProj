@@ -1,4 +1,4 @@
-namespace WebApplication1.Models;
+namespace Pitwall.Models;
 
 /// <summary>
 /// Represents a single Grand Prix race event with all associated data.

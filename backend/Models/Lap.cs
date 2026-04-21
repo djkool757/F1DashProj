@@ -1,4 +1,4 @@
-namespace WebApplication1.Models;
+namespace Pitwall.Models;
 
 /// <summary>
 /// Represents lap-by-lap timing data for a single lap of a race.

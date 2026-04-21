@@ -1,4 +1,4 @@
-namespace WebApplication1.Models;
+namespace Pitwall.Models;
 
 /// <summary>
 /// Represents a driver's qualifying session result, including fastest lap times from each qualifying segment.

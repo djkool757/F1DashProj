@@ -48,7 +48,7 @@ cd backend
 dotnet run
 ```
 
-The API runs on `http://localhost:5000`. Swagger UI is available at `/swagger`.
+The API runs on `http://localhost:5216`. Swagger UI is available at `/swagger`.
 
 ### Frontend
 

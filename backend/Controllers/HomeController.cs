@@ -1,9 +1,9 @@
 using System.Diagnostics;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using WebApplication1.Models;
+using Pitwall.Models;
 
-namespace WebApplication1.Controllers;
+namespace Pitwall.Controllers;
 
 public class HomeController : Controller
 {

@@ -1,4 +1,4 @@
-namespace WebApplication1.Exceptions;
+namespace Pitwall.Exceptions;
 
 /// <summary>
 /// Exception thrown when a requested resource is not found (404)

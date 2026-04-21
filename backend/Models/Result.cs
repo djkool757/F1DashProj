@@ -1,4 +1,4 @@
-namespace WebApplication1.Models;
+namespace Pitwall.Models;
 
 /// <summary>
 /// Represents the final race result for a single driver in a Grand Prix, including timing and fastest lap data.

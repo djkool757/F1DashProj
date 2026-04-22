@@ -28,10 +28,10 @@ jobs:
           dotnet-version: '9.0.x'
 
       - name: Restore
-        run: dotnet restore .NET.sln
+        run: dotnet restore backend.Tests/Pitwall.Tests.csproj
 
       - name: Build
-        run: dotnet build .NET.sln --no-restore --configuration Release
+        run: dotnet build backend.Tests/Pitwall.Tests.csproj --no-restore --configuration Release
 
       - name: Test
-        run: dotnet test .NET.sln --no-build --configuration Release --verbosity normal
+        run: dotnet test backend.Tests/Pitwall.Tests.csproj --no-build --configuration Release --verbosity normal

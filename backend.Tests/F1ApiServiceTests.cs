@@ -177,37 +177,65 @@ public class F1ApiServiceTests
         Assert.Equal(1, handler.CallCount);
     }
 
-    /*
+    
     [Fact]
     public async Task GetRaces_DifferentSeasons_MakesTwoHttpRequests()
     {
-        throw new NotImplementedException();
+        var handler = new CountingHttpHandler(EmptyRacesJson());
+        var service = BuildService(handler);
+
+        await service.GetRaces("2025");
+        await service.GetRaces("2026");
+
+        Assert.Equal(2, handler.CallCount);
     }
 
     [Fact]
     public async Task GetSeasons_CalledTwice_OnlyMakesOneHttpRequest()
     {
-        throw new NotImplementedException();
+        var handler = new CountingHttpHandler(EmptyRacesJson());
+        var service = BuildService(handler);
+
+        await service.GetSeasons();
+        await service.GetSeasons();
+        Assert.Equal(1, handler.CallCount);
     }
 
     [Fact]
     public async Task GetCircuits_CalledTwice_OnlyMakesOneHttpRequest()
     {
-        throw new NotImplementedException();
+        var handler = new CountingHttpHandler(EmptyRacesJson());
+        var service = BuildService(handler);
+
+        await service.GetCircuits();
+        await service.GetCircuits();
+        Assert.Equal(1, handler.CallCount);
     }
 
     [Fact]
     public async Task GetResults_SameSeasonAndRound_OnlyMakesOneHttpRequest()
     {
-        throw new NotImplementedException();
+        var handler = new CountingHttpHandler(SampleResultsJson());
+        var service = BuildService(handler);
+
+        await service.GetResults("2026", "1");
+        await service.GetResults("2026", "1");
+
+        Assert.Equal(1, handler.CallCount);
     }
 
     [Fact]
     public async Task GetResults_DifferentRounds_MakesTwoHttpRequests()
     {
-        throw new NotImplementedException();
+        var handler = new CountingHttpHandler(SampleResultsJson());
+        var service = BuildService(handler);
+
+        await service.GetResults("2026", "1");
+        await service.GetResults("2026", "2");
+
+        Assert.Equal(2, handler.CallCount);
     }
-    */
+    
 
     // =========================================================================
     // GetLatestRace logic
@@ -241,25 +269,84 @@ public class F1ApiServiceTests
         Assert.Equal("Saudi Arabian GP", result.RaceName);
     }
 
-    /*
+    
     [Fact]
     public async Task GetLatestRace_AllRacesInFuture_ReturnsFirstUpcoming()
     {
-        throw new NotImplementedException();
+        var past1  = DateTime.UtcNow.AddDays(-30).ToString("yyyy-MM-ddTHH:mm:ss");
+        var past2  = DateTime.UtcNow.AddDays(-7).ToString("yyyy-MM-ddTHH:mm:ss");
+        var future = DateTime.UtcNow.AddDays(14).ToString("yyyy-MM-ddTHH:mm:ss");
+
+        var json = $$"""
+            {
+              "MRData": {
+                "RaceTable": {
+                  "Season": "2025",
+                    "Races": [
+                      { "Season": "2025", "Round": "1", "RaceName": "Bahrain GP",       "Date": "{{future}}" },
+                      { "Season": "2025", "Round": "2", "RaceName": "Saudi Arabian GP", "Date": "{{future}}" },
+                      { "Season": "2025", "Round": "3", "RaceName": "Australian GP",    "Date": "{{future}}" }
+                    ]
+                }
+              }
+            }
+            """;
+
+        var service = BuildService(json);
+        var result = await service.GetLatestRace("2025");
+
+        Assert.Equal("Bahrain GP", result.RaceName);
     }
 
     [Fact]
     public async Task GetLatestRace_AllRacesInPast_ReturnsLastOne()
     {
-        throw new NotImplementedException();
+        var past1 = DateTime.UtcNow.AddDays(-30).ToString("yyyy-MM-ddTHH:mm:ss");
+        var past2 = DateTime.UtcNow.AddDays(-7).ToString("yyyy-MM-ddTHH:mm:ss");
+
+        var json = $$"""
+            {
+              "MRData": {
+                "RaceTable": {
+                  "Season": "2025",
+                  "Races": [
+                    { "Season": "2025", "Round": "1", "RaceName": "Bahrain GP",       "Date": "{{past1}}" },
+                    { "Season": "2025", "Round": "2", "RaceName": "Saudi Arabian GP", "Date": "{{past2}}" }
+                  ]
+                }
+              }
+            }
+            """;
+
+        var service = BuildService(json);
+        var result = await service.GetLatestRace("2025");
+
+        Assert.Equal("Saudi Arabian GP", result.RaceName);
     }
 
     [Fact]
     public async Task GetLatestRace_SingleRaceInPast_ReturnsThatRace()
     {
-        throw new NotImplementedException();
+        var past = DateTime.UtcNow.AddDays(-7).ToString("yyyy-MM-ddTHH:mm:ss");
+
+        var json = $$"""
+            {
+              "MRData": {
+                "RaceTable": {
+                  "Season": "2025",
+                  "Races": [
+                    { "Season": "2025", "Round": "1", "RaceName": "Bahrain GP",       "Date": "{{past}}" }
+                  ]
+                }
+              }
+            }
+            """;
+
+        var service = BuildService(json);
+        var result = await service.GetLatestRace("2025");
+
+        Assert.Equal("Bahrain GP", result.RaceName);
     }
-    */
 
     [Fact]
     public async Task GetLatestRace_EmptyRaceList_ThrowsInvalidOperationException()
@@ -268,37 +355,30 @@ public class F1ApiServiceTests
         await Assert.ThrowsAsync<InvalidOperationException>(() => service.GetLatestRace("2026"));
     }
 
-    /*
+    
     [Fact]
     public async Task GetLatestRace_NoSeasonProvided_UsesCurrentYear()
     {
-        throw new NotImplementedException();
-    }
-    */
+        var past = DateTime.UtcNow.AddDays(-7).ToString("yyyy-MM-ddTHH:mm:ss");
 
-    // =========================================================================
-    // HTTP / deserialization
-    // =========================================================================
+        var json = $$"""
+            {
+              "MRData": {
+                "RaceTable": {
+                  "Season": "2025",
+                  "Races": [
+                    { "Season": "2025", "Round": "1", "RaceName": "Bahrain GP",       "Date": "{{past}}" }
+                  ]
+                }
+              }
+            }
+            """;
 
-    /*
-    [Fact]
-    public async Task GetRaces_HttpReturns500_ThrowsHttpRequestException()
-    {
-        throw new NotImplementedException();
-    }
+        var service = BuildService(json);
+        var result = await service.GetLatestRace();
+        Assert.Equal("Bahrain GP", result.RaceName);
 
-    [Fact]
-    public async Task GetRaces_HttpReturns404_ThrowsHttpRequestException()
-    {
-        throw new NotImplementedException();
     }
-
-    [Fact]
-    public async Task GetRaces_MalformedJson_ThrowsJsonException()
-    {
-        throw new NotImplementedException();
-    }
-    */
 
     [Fact]
     public async Task GetRaces_ValidResponse_ReturnsDeserializedData()
@@ -319,41 +399,6 @@ public class F1ApiServiceTests
         Assert.Empty(response.MRData.RaceTable.Races);
     }
 
-    // =========================================================================
-    // URL construction
-    // =========================================================================
-
-    /*
-    [Fact]
-    public async Task GetResults_WithRound_UrlContainsSeasonAndRound()
-    {
-        throw new NotImplementedException();
-    }
-
-    [Fact]
-    public async Task GetResults_WithoutRound_UrlDoesNotContainRound()
-    {
-        throw new NotImplementedException();
-    }
-
-    [Fact]
-    public async Task GetSprint_WithRound_UrlContainsSprint()
-    {
-        throw new NotImplementedException();
-    }
-
-    [Fact]
-    public async Task GetQualifying_WithRound_UrlContainsQualifying()
-    {
-        throw new NotImplementedException();
-    }
-
-    [Fact]
-    public async Task GetLaps_ValidArgs_UrlContainsLimitParam()
-    {
-        throw new NotImplementedException();
-    }
-    */
 
     // =========================================================================
     // Helpers

@@ -121,7 +121,7 @@ public class F1ApiService : IF1ApiService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error fetching races for season {season}");
+            _logger.LogError(ex, "Error fetching races for season {Season}", season);
             throw;
         }
     }
@@ -140,7 +140,7 @@ public class F1ApiService : IF1ApiService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error fetching constructors for season {season}");
+            _logger.LogError(ex, "Error fetching constructors for season {Season}", season);
             throw;
         }
     }
@@ -158,7 +158,7 @@ public class F1ApiService : IF1ApiService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error fetching drivers for season {season}");
+            _logger.LogError(ex, "Error fetching drivers for season {Season}", season);
             throw;
         }
     }
@@ -179,7 +179,7 @@ public class F1ApiService : IF1ApiService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error fetching results for season {season}, round {round}");
+            _logger.LogError(ex, "Error fetching results for season {Season}, round {Round}", season, round);
             throw;
         }
     }
@@ -200,7 +200,7 @@ public class F1ApiService : IF1ApiService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error fetching sprint results for season {season}, round {round}");
+            _logger.LogError(ex, "Error fetching sprint results for season {Season}, round {Round}", season, round);
             throw;
         }
     }
@@ -221,7 +221,7 @@ public class F1ApiService : IF1ApiService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error fetching qualifying results for season {season}, round {round}");
+            _logger.LogError(ex, "Error fetching qualifying results for season {Season}, round {Round}", season, round);
             throw;
         }
     }
@@ -240,7 +240,7 @@ public class F1ApiService : IF1ApiService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error fetching pit stops for season {season}, round {round}");
+            _logger.LogError(ex, "Error fetching pit stops for season {Season}, round {Round}", season, round);
             throw;
         }
     }
@@ -259,7 +259,7 @@ public class F1ApiService : IF1ApiService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error fetching laps for season {season}, round {round}");
+            _logger.LogError(ex, "Error fetching laps for season {Season}, round {Round}", season, round);
             throw;
         }
     }
@@ -280,7 +280,7 @@ public class F1ApiService : IF1ApiService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error fetching driver standings for season {season}, round {round}");
+            _logger.LogError(ex, "Error fetching driver standings for season {Season}, round {Round}", season, round);
             throw;
         }
     }
@@ -331,7 +331,7 @@ public class F1ApiService : IF1ApiService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error fetching latest race for season {season}");
+            _logger.LogError(ex, "Error fetching latest race for season {Season}", season);
             throw;
         }
     }
@@ -343,13 +343,13 @@ public class F1ApiService : IF1ApiService
     {
         if (_cache.TryGetValue(url, out F1ApiResponse? cached) && cached != null)
         {
-            _logger.LogInformation($"Cache hit: {url}");
+            _logger.LogInformation("Cache hit: {Url}", url);
             return cached;
         }
 
         try
         {
-            _logger.LogInformation($"Fetching data from: {url}");
+            _logger.LogInformation("Fetching data from: {Url}", url);
 
             using var response = await _httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
@@ -367,12 +367,12 @@ public class F1ApiService : IF1ApiService
         }
         catch (HttpRequestException ex)
         {
-            _logger.LogError(ex, $"HTTP request error when fetching {url}");
+            _logger.LogError(ex, "HTTP request error when fetching {Url}", url);
             throw;
         }
         catch (JsonException ex)
         {
-            _logger.LogError(ex, $"JSON deserialization error when processing response from {url}");
+            _logger.LogError(ex, "JSON deserialization error when processing response from {Url}", url);
             throw;
         }
     }

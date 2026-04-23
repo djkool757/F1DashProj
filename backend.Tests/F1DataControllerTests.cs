@@ -350,6 +350,50 @@ public class F1DataControllerTests
     }
 
     // =========================================================================
+    // Security: 500 responses must not leak internal exception details
+    // =========================================================================
+
+    [Fact]
+    public async Task GetSeasons_ServiceThrows_ErrorBodyIsGeneric()
+    {
+        var controller = BuildController(new FakeF1ApiService { ThrowGeneral = true });
+        var result = await controller.GetSeasons();
+        AssertErrorBodyIsGeneric(result.Result);
+    }
+
+    [Fact]
+    public async Task GetRaces_ServiceThrows_ErrorBodyIsGeneric()
+    {
+        var controller = BuildController(new FakeF1ApiService { ThrowGeneral = true });
+        var result = await controller.GetRaces("2026");
+        AssertErrorBodyIsGeneric(result.Result);
+    }
+
+    [Fact]
+    public async Task GetResults_ServiceThrows_ErrorBodyIsGeneric()
+    {
+        var controller = BuildController(new FakeF1ApiService { ThrowGeneral = true });
+        var result = await controller.GetResults("2026");
+        AssertErrorBodyIsGeneric(result.Result);
+    }
+
+    [Fact]
+    public async Task GetLaps_ServiceThrows_ErrorBodyIsGeneric()
+    {
+        var controller = BuildController(new FakeF1ApiService { ThrowGeneral = true });
+        var result = await controller.GetLaps("2026", "1");
+        AssertErrorBodyIsGeneric(result.Result);
+    }
+
+    [Fact]
+    public async Task GetLatestRace_ServiceThrows_ErrorBodyIsGeneric()
+    {
+        var controller = BuildController(new FakeF1ApiService { ThrowGeneral = true });
+        var result = await controller.GetLatestRace();
+        AssertErrorBodyIsGeneric(result.Result);
+    }
+
+    // =========================================================================
     // Helpers
     // =========================================================================
 
@@ -360,6 +404,17 @@ public class F1DataControllerTests
     {
         var objectResult = Assert.IsType<ObjectResult>(result);
         Assert.Equal(500, objectResult.StatusCode);
+    }
+
+    private static void AssertErrorBodyIsGeneric(ActionResult? result)
+    {
+        var objectResult = Assert.IsType<ObjectResult>(result);
+        Assert.Equal(500, objectResult.StatusCode);
+        var json = System.Text.Json.JsonSerializer.Serialize(objectResult.Value);
+        Assert.Contains("\"error\"", json);
+        Assert.DoesNotContain("simulated failure", json);
+        Assert.DoesNotContain("InvalidOperationException", json);
+        Assert.DoesNotContain("System.", json);
     }
 
     private sealed class FakeF1ApiService : IF1ApiService
